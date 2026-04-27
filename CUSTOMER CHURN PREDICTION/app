@@ -129,7 +129,7 @@ def main():
     monthly = st.number_input("Monthly Charges", 0.0, 200.0, 70.0)
     total = st.number_input("Total Charges", 0.0, 10000.0, 1000.0)
     contract = st.selectbox("Contract Type", ["Month-to-month", "One year", "Two year"])
-    internet = st.selectbox("Internet Service", ["DSL", "Fiber optic", "No"])
+    daily_consumption = st.number_input("Daily Consumption (INR)", 0.0, 10.0, 1.0))
 
     if st.button("Predict Churn"):
         input_data = {
@@ -137,7 +137,7 @@ def main():
             "MonthlyCharges": monthly,
             "TotalCharges": total,
             "Contract": contract,
-            "InternetService": internet
+            "DailyConsumption": daily_consumption
         }
         
         # Run prediction
