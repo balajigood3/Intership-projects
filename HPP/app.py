@@ -14,16 +14,22 @@ import streamlit as st
 # =========================================
 # CONFIG
 # =========================================
-# This finds the actual folder where app.py is located
+import os
+import pandas as pd
+import streamlit as st
+
+# 1. Get the directory where app.py is located
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-# Use the full joined path for your CSVs
-train_path = os.path.join(BASE_DIR, "train.csv")
-test_path = os.path.join(BASE_DIR, "test.csv")
+# 2. Define the paths for both files
+# (Make sure these filenames match your GitHub exactly!)
+DATA_PATH = os.path.join(BASE_DIR, "train.csv")
+TEST_PATH = os.path.join(BASE_DIR, "test.csv")
 
-# Load your data
-train_df = pd.read_csv(train_path)
-test_df = pd.read_csv(test_path)
+# 3. Validation check (Optional but helpful for debugging)
+if not os.path.exists(DATA_PATH):
+    st.error(f"Missing file: {DATA_PATH}")
+    
 MODEL_PATH = "xgb_model.pkl"
 SCALER_PATH = "scaler.pkl"
 COLS_PATH = "cols.pkl"
