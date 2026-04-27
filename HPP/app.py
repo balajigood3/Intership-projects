@@ -15,21 +15,28 @@ from pathlib import Path
 # =========================================
 # CONFIG
 # =========================================
+import pandas as pd
+import streamlit as st
+import os
 
-# Absolute path to the folder containing app.py
-BASE_DIR = Path(__file__).resolve().parent
+# 1. Force the working directory to be the folder where app.py is
+# This prevents the "/" directory error entirely
+current_dir = os.path.dirname(os.path.abspath(__file__))
+os.chdir(current_dir)
 
-# Define the variables your app expects
-DATA_PATH = str(BASE_DIR / "train.csv")
-TEST_PATH = str(BASE_DIR / "test.csv")
+# 2. Now use simple filenames because we are already in the right folder
+DATA_PATH = "train.csv"
+TEST_PATH = "test.csv"
 
-# Load the data using these exact variables
-try:
-    train_df = pd.read_csv(DATA_PATH)
-    test_df = pd.read_csv(TEST_PATH)
-except Exception as e:
-    st.error(f"Error loading CSV: {e}")
+# 3. Final safety check to tell us exactly what's happening
+if not os.path.exists(DATA_PATH):
+    st.error(f"FATAL ERROR: {DATA_PATH} not found in {current_dir}")
+    st.write("I can see these files:", os.listdir("."))
     st.stop()
+else:
+    # This is the line that was crashing
+    df = pd.read_csv(DATA_PATH)
+    st.success("Successfully loaded train.csv!")
     
 MODEL_PATH = "xgb_model.pkl"
 SCALER_PATH = "scaler.pkl"
