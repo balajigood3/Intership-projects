@@ -14,21 +14,23 @@ import streamlit as st
 # =========================================
 # CONFIG
 # =========================================
-import os
-import pandas as pd
-import streamlit as st
+# Use pathlib for more reliable path handling on Cloud
+from pathlib import Path
 
-# 1. Get the directory where app.py is located
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+# Get the directory where app.py lives
+BASE_DIR = Path(__file__).parent
 
-# 2. Define the paths for both files
-# (Make sure these filenames match your GitHub exactly!)
-DATA_PATH = os.path.join(BASE_DIR, "train.csv")
-TEST_PATH = os.path.join(BASE_DIR, "test.csv")
+# Set paths explicitly
+TEST_PATH = BASE_DIR / "test.csv"
+TRAIN_PATH = BASE_DIR / "train.csv"
 
-# 3. Validation check (Optional but helpful for debugging)
-if not os.path.exists(DATA_PATH):
-    st.error(f"Missing file: {DATA_PATH}")
+# Re-assign DATA_PATH if your functions specifically look for that name
+DATA_PATH = str(TRAIN_PATH)
+
+# Debugging: This will show you on the app if the file is missing
+if not TRAIN_PATH.exists():
+    st.error(f"⚠️ Error: train.csv not found at {TRAIN_PATH}")
+    st.write("Files available in this folder:", os.listdir(BASE_DIR))
     
 MODEL_PATH = "xgb_model.pkl"
 SCALER_PATH = "scaler.pkl"
