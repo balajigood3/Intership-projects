@@ -14,11 +14,19 @@ import streamlit as st
 # =========================================
 # CONFIG
 # =========================================
-DATA_PATH = ("test.csv", "train.csv")
+# This finds the actual folder where app.py is located
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+# Use the full joined path for your CSVs
+train_path = os.path.join(BASE_DIR, "train.csv")
+test_path = os.path.join(BASE_DIR, "test.csv")
+
+# Load your data
+train_df = pd.read_csv(train_path)
+test_df = pd.read_csv(test_path)
 MODEL_PATH = "xgb_model.pkl"
 SCALER_PATH = "scaler.pkl"
 COLS_PATH = "cols.pkl"
-
 location_map = {"Urban": 1.5, "Semi-Urban": 1.2, "Rural": 0.8}
 
 # =========================================
