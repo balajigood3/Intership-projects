@@ -10,27 +10,26 @@ from sklearn.preprocessing import StandardScaler
 from xgboost import XGBRegressor
 import shap
 import streamlit as st
+from pathlib import Path
 
 # =========================================
 # CONFIG
 # =========================================
-# Use pathlib for more reliable path handling on Cloud
-from pathlib import Path
 
-# Get the directory where app.py lives
-BASE_DIR = Path(__file__).parent
+# Absolute path to the folder containing app.py
+BASE_DIR = Path(__file__).resolve().parent
 
-# Set paths explicitly
-TEST_PATH = BASE_DIR / "test.csv"
-TRAIN_PATH = BASE_DIR / "train.csv"
+# Define the variables your app expects
+DATA_PATH = str(BASE_DIR / "train.csv")
+TEST_PATH = str(BASE_DIR / "test.csv")
 
-# Re-assign DATA_PATH if your functions specifically look for that name
-DATA_PATH = str(TRAIN_PATH)
-
-# Debugging: This will show you on the app if the file is missing
-if not TRAIN_PATH.exists():
-    st.error(f"⚠️ Error: train.csv not found at {TRAIN_PATH}")
-    st.write("Files available in this folder:", os.listdir(BASE_DIR))
+# Load the data using these exact variables
+try:
+    train_df = pd.read_csv(DATA_PATH)
+    test_df = pd.read_csv(TEST_PATH)
+except Exception as e:
+    st.error(f"Error loading CSV: {e}")
+    st.stop()
     
 MODEL_PATH = "xgb_model.pkl"
 SCALER_PATH = "scaler.pkl"
