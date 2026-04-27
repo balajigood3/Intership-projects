@@ -15,8 +15,12 @@ import streamlit as st
 # ========================================= #
 # CONFIG                                    #
 # ========================================= #
-DATA_PATH = "Telco_Customer_Churn.csv"
+# This gets the directory where app.py actually lives
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DATA_PATH = os.path.join(BASE_DIR, "Telco_Customer_Churn.csv")
 MODEL_PATH = "churn_model.pkl"
+# Then load it as usual
+df = pd.read_csv(DATA_PATH)
 
 # ========================================= #
 # DATA PREPROCESSING                        #
