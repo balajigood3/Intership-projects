@@ -10,37 +10,21 @@ from sklearn.preprocessing import StandardScaler
 from xgboost import XGBRegressor
 import shap
 import streamlit as st
-from pathlib import Path
 
 # =========================================
 # CONFIG
 # =========================================
-import pandas as pd
-import streamlit as st
-import os
+# Get the directory where the script is located
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-# 1. Force the working directory to be the folder where app.py is
-# This prevents the "/" directory error entirely
-current_dir = os.path.dirname(os.path.abspath(__file__))
-os.chdir(current_dir)
+DATA_PATH = (
+    os.path.join(BASE_DIR, "test.csv"),
+    os.path.join(BASE_DIR, "train.csv")
+)
+MODEL_PATH = os.path.join(BASE_DIR, "xgb_model.pkl")
+SCALER_PATH = os.path.join(BASE_DIR, "scaler.pkl")
+COLS_PATH = os.path.join(BASE_DIR, "cols.pkl")
 
-# 2. Now use simple filenames because we are already in the right folder
-DATA_PATH = "train.csv"
-TEST_PATH = "test.csv"
-
-# 3. Final safety check to tell us exactly what's happening
-if not os.path.exists(DATA_PATH):
-    st.error(f"FATAL ERROR: {DATA_PATH} not found in {current_dir}")
-    st.write("I can see these files:", os.listdir("."))
-    st.stop()
-else:
-    # This is the line that was crashing
-    df = pd.read_csv(DATA_PATH)
-    st.success("Successfully loaded train.csv!")
-    
-MODEL_PATH = "xgb_model.pkl"
-SCALER_PATH = "scaler.pkl"
-COLS_PATH = "cols.pkl"
 location_map = {"Urban": 1.5, "Semi-Urban": 1.2, "Rural": 0.8}
 
 # =========================================
@@ -153,7 +137,7 @@ def predict(model, scaler, cols, input_data):
 # =========================================
 def main():
     st.set_page_config(page_title="House AI PRO", layout="wide")
-    st.title("🏠 House Price Prediction PRO AI")
+    st.title("House Price Prediction AI")
 
     try:
         model, scaler, cols = load_model()
@@ -190,7 +174,7 @@ def main():
             st.info(f"Avg: ₹ {price/area:,.2f} per sqft")
         
         with res_c2:
-            st.subheader("🧠 Price Driver Analysis (SHAP)")
+            st.subheader("Price Driver Analysis (SHAP)")
             explainer = shap.Explainer(model)
             shap_values = explainer(processed_df)
             shap_df = pd.DataFrame({"Feature": cols, "Impact": shap_values.values[0]}).sort_values(by="Impact")
